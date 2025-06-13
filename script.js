@@ -288,7 +288,7 @@ function adicionarAgente() {
 }
 function autoExpand(textarea) {
     textarea.style.height = 'auto'; // reset
-    textarea.style.height = textarea.scrollHeight/1.19 + 'px';
+    textarea.style.height = textarea.scrollHeight + 'px';
 }
 function excluirLinha(btn) {
     const row = btn.closest('tr');
