@@ -264,8 +264,8 @@ function adicionarAgente() {
             </select>
             <span class="select-print" style="display:none;"></span>
         </td>
-        <td><input type="text" size="20"></td>
         <td><input type="text" size="15"></td>
+        <td><input type="text" size="5"></td>
     `;
 
     tbody.appendChild(tr);
