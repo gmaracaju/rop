@@ -257,12 +257,10 @@ function adicionarAgente() {
         <td>
             <select onchange="updateSelectPrint(this)">
                 <option></option>
-                <option>GM-1</option>
-                <option>GM-2</option>
-                <option>GM-3</option>
-                <option>SUPERVISOR</option>
-                <option>SUB-INSPETOR</option>
-                <option>INSPETOR</option>
+                <option>Subinspetor de 2ª Classe</option>
+                <option>Subinspetor de 3ª Classe</option>
+                <option>Supervisor</option>
+                <option>Guarda Municipal</option>
             </select>
             <span class="select-print" style="display:none;"></span>
         </td>
