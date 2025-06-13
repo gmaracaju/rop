@@ -265,7 +265,7 @@ function adicionarAgente() {
             </select>
             <span class="select-print" style="display:none;"></span>
         </td>
-        <td><input type="text" size="15"></td>
+        <td><input type="text" size="24"></td>
         <td><input type="text" size="5"></td>
     `;
 
