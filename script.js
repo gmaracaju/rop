@@ -175,23 +175,28 @@ function imprimirSemBotoes() {
 
     // Atualiza visualização de selects
     document.querySelectorAll('select').forEach(select => {
-    const printSpan = select.nextElementSibling;
-    if (printSpan && printSpan.classList.contains('select-print')) {
-        printSpan.textContent = select.options[select.selectedIndex]?.text || '';
-        printSpan.style.display = 'inline-flex';  // mudar para flex para alinhar verticalmente
-        select.style.display = 'none';             // esconde select para impressão
-    }
-});
+        const printSpan = select.nextElementSibling;
+        if (printSpan && printSpan.classList.contains('select-print')) {
+            printSpan.textContent = select.options[select.selectedIndex]?.text || '';
+            printSpan.style.display = 'inline-flex'; // mostrar texto na impressão
+            select.style.display = 'none'; // esconde o select
+        }
+    });
 
     // Imprime
     setTimeout(() => {
         window.print();
 
-        // Restaura botões e elementos
+        // Restaura botões
         botoes.forEach(botao => botao.style.display = '');
 
-        document.querySelectorAll('.select-print').forEach(span => {
-            span.style.display = 'none';
+        // Restaura selects e esconde os spans
+        document.querySelectorAll('select').forEach(select => {
+            const printSpan = select.nextElementSibling;
+            if (printSpan && printSpan.classList.contains('select-print')) {
+                printSpan.style.display = 'none';
+                select.style.display = ''; // mostra o select novamente
+            }
         });
 
         // Remove mensagens adicionadas
