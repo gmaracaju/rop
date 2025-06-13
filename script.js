@@ -175,12 +175,13 @@ function imprimirSemBotoes() {
 
     // Atualiza visualização de selects
     document.querySelectorAll('select').forEach(select => {
-        const printSpan = select.nextElementSibling;
-        if (printSpan && printSpan.classList.contains('select-print')) {
-            printSpan.textContent = select.options[select.selectedIndex]?.text || '';
-            printSpan.style.display = 'inline';
-        }
-    });
+    const printSpan = select.nextElementSibling;
+    if (printSpan && printSpan.classList.contains('select-print')) {
+        printSpan.textContent = select.options[select.selectedIndex]?.text || '';
+        printSpan.style.display = 'inline-flex';  // mudar para flex para alinhar verticalmente
+        select.style.display = 'none';             // esconde select para impressão
+    }
+});
 
     // Imprime
     setTimeout(() => {
