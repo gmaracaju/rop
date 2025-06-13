@@ -1,0 +1,467 @@
+body {
+    margin: 0 auto;
+    width: 940px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    background-image: url(images.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.fundopreto {
+    background-color: #11114E;
+    color: white;
+    text-align: center;
+    font-size: 13px;
+    padding: 3px;
+    margin: 0;
+}
+
+.fundocinza {
+    background-color: rgb(180, 180, 180);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid black;
+    word-spacing: 12px;
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+}
+
+.gmsocorrencia {
+    background-color: #11114E;
+    padding: 10px;
+    width: 40%;
+}
+
+.tabela3cabeca {
+    width: 25%;
+}
+
+#dados1 {
+    display: none;
+}
+
+.prefeitura {
+    border: 1px solid black;
+    background-color: rgb(255, 255, 255);
+    border-collapse: collapse;
+}
+
+.prefeitura2 {
+    text-align: center;
+    border-collapse: collapse;
+    width: 300px;
+    font-size: 12px;
+}
+
+.tdimg {
+    width: 75px;
+    text-align: center;
+}
+
+img {
+    width: 80px;
+    height: 80px;
+}
+
+.registro-ocorrencia {
+    width: 700px;
+}
+
+.tabela3 {
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.nomematricula {
+    width: 300px;
+}
+
+.postodeservico input {
+    border: none;
+    text-align: center;
+    width: 35%;
+}
+
+.postodeservico {
+    background-color: white;
+    border: 1px solid black;
+    margin: 0;
+}
+
+.assinaturaequipe {
+    background-color: white;
+    width: 938px;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 20px;
+    border: 1px solid black;
+    margin: 0px;
+}
+
+h1 {
+    background-color: #11114E;
+    color: white;
+    letter-spacing: 15px;
+    word-spacing: 20px;
+    text-align: center;
+    margin: 0;
+    font-size: 16px;
+    padding: 10px;
+}
+
+textarea {
+    width: 878px;
+    border: 1px solid black;
+    resize: vertical;
+    padding: 30px;
+    outline: none;
+    margin: 0;
+    font-size: 12pt;
+    text-align: justify;
+}
+
+table tr td {
+    border: 1px solid black;
+    background-color: white;
+}
+
+.pai {
+    width: 330px;
+}
+
+.end {
+    width: 600px;
+}
+
+#telefone {
+    width: 247px;
+}
+
+#conduzidos {
+    border-collapse: collapse;
+}
+
+#pai {
+    width: 280px;
+}
+
+#mae {
+    width: 273px;
+}
+
+#end {
+    width: 540px;
+}
+
+#nome {
+    width: 280px;
+}
+
+input {
+    text-align: left;
+}
+
+#tabeladados {
+    border-collapse: collapse;
+}
+
+.tddescricao {
+    width: 620px;
+}
+
+#descricao1 {
+    width: 370px;
+}
+
+input,
+option,
+select {
+    border: none;
+}
+
+.divbotao {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.imprimir {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.cpf {
+    width: 350px;
+}
+
+#tabelaconduz {
+    display: none;
+}
+
+.container {
+    background-color: #ffffff;
+    border: 1px solid black;
+    position: relative;
+    padding: 50px 20px;
+}
+
+input[type="file"] {
+    display: none;
+    border: 1px solid rgb(185, 0, 0);
+}
+
+label {
+    display: block;
+    background-color: #e0e0e0;
+    position: relative;
+    color: rgb(0, 0, 0);
+    font-size: 12pt;
+    text-align: center;
+    width: 120px;
+    padding: 2px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.container p {
+    text-align: center;
+    margin: auto;
+    border: none;
+}
+
+#images {
+    width: 100%;
+    position: relative;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+figure {
+    width: 40%;
+}
+
+img {
+    width: 80%;
+    height: 80%;
+}
+
+figcaption {
+    text-align: center;
+    font-size: 5px;
+    margin-top: 0.5vmin;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.excluir-btn {
+    background-color: red;
+    color: white;
+    padding: 2px 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.excluir-btn:hover {
+    background-color: darkred;
+}
+
+#upload {
+    display: none;
+}
+
+.custom-btn {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    text-align: center;
+}
+
+.custom-btn:hover {
+    background-color: #7a7a7a;
+}
+
+.preview-container {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Imagens sem zoom */
+.image-box {
+    width: 350px;
+    height: 350px;
+    border: 2px dashed #aaa;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.remove-btn:hover {
+    background-color: red;
+}
+
+.tabela3 th, .tabela3 td {
+    border: 1px solid black;
+    padding: 5px;
+    background-color: white;
+    text-align: center;
+    height: 10px;
+    vertical-align: middle;
+}
+
+.tabela3 input {
+    width: 98%;
+    border: 1px solid #ccc !important;
+}
+
+.tabela3 select {
+    width: 98%;
+}
+
+.tabela3 th {
+    background-color: rgb(180, 180, 180) !important;
+    font-weight: bold;
+    padding: 8px;
+}
+
+@media print {
+    .divbotao, .excluir-btn, .custom-btn, .remove-btn, .imprimir {
+        display: none !important;
+    }
+    
+    .tabela3, .tabela3 th, .tabela3 td {
+        border: 1px solid black !important;
+    }
+    
+    .tabela3 input {
+        border: none !important;
+        background: transparent !important;
+    }
+    
+    select, select * {
+        visibility: hidden;
+        border: none !important;
+    }
+    
+    .select-print {
+        display: inline !important;
+        visibility: visible !important;
+    }
+    
+    .button-container {
+        display: none !important;
+    }
+* Campos expansíveis */
+textarea {
+    width: 100%;
+    min-height: 100px;
+    max-height: 1000px;
+    border: 1px solid #ccc;
+    font-size: 12pt;
+    box-sizing: border-box;
+    padding: 2px 4px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    resize: none;
+    line-height: 1.3;
+    overflow: hidden; /* Isso remove a barra de rolagem */
+}
+
+/* Relato da Ocorrência específico */
+#relato {
+    width: 100%;
+    min-height: 40px;
+    max-height: 800px;
+    border: 1px solid #000;
+    font-size: 12pt;
+    padding: 5px;
+    line-height: 1.4;
+    resize: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Tabelas compactas */
+.tabela3 th, .tabela3 td {
+    border: 1px solid black;
+    padding: 2px;
+    background-color: white;
+    text-align: center;
+    height: auto;
+    min-height: 20px;
+    vertical-align: middle;
+    font-size: 9pt;
+}
+
+.tabela3 th {
+    background-color: rgb(180, 180, 180) !important;
+    font-weight: bold;
+}
+
+/* Centralização do botão EXCLUIR */
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.button-container-row td {
+    text-align: center;
+}
+
+/* Imagens sem zoom */
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: white;
+}
