@@ -135,32 +135,66 @@ uploadInput.addEventListener('change', function () {
 });
 
 function imprimirSemBotoes() {
+    // Esconde botões antes de imprimir
     const botoes = document.querySelectorAll(
         '.excluir-btn, .custom-btn, .remove-btn, #inserir-btn, .imprimir, .button-container'
     );
-    
+    botoes.forEach(botao => botao.style.display = 'none');
+
+    // Verifica se há partes envolvidas
+    const partesVisiveis = Array.from(document.querySelectorAll('#tabelaconduz, .tabelaconduz-clone'))
+        .filter(div => div.style.display !== 'none');
+    if (partesVisiveis.length === 0) {
+        const aviso = document.createElement('p');
+        aviso.textContent = 'Sem partes envolvidas';
+        aviso.style.textAlign = 'center';
+        aviso.style.marginTop = '10px';
+        document.querySelector('#div2').appendChild(aviso);
+    }
+
+    // Verifica apreensões
+    const tabelaApreensoes = document.getElementById('tabela-apreensoes');
+    const linhasApreensoes = tabelaApreensoes.querySelectorAll('tbody tr');
+    if (linhasApreensoes.length === 0) {
+        const aviso = document.createElement('p');
+        aviso.textContent = 'Nenhum objeto apreendido';
+        aviso.style.textAlign = 'center';
+        aviso.style.marginTop = '10px';
+        tabelaApreensoes.insertAdjacentElement('afterend', aviso);
+    }
+
+    // Verifica imagens
+    const preview = document.getElementById('previewContainer');
+    if (preview.querySelectorAll('.image-box').length === 0) {
+        const aviso = document.createElement('p');
+        aviso.textContent = 'Não foram anexadas imagens';
+        aviso.style.textAlign = 'center';
+        aviso.style.marginTop = '10px';
+        preview.appendChild(aviso);
+    }
+
+    // Atualiza visualização de selects
     document.querySelectorAll('select').forEach(select => {
         const printSpan = select.nextElementSibling;
         if (printSpan && printSpan.classList.contains('select-print')) {
-            printSpan.textContent = select.options[select.selectedIndex].text;
+            printSpan.textContent = select.options[select.selectedIndex]?.text || '';
             printSpan.style.display = 'inline';
         }
     });
 
-    botoes.forEach(botao => {
-        botao.style.display = 'none';
-    });
-
+    // Imprime
     setTimeout(() => {
         window.print();
 
-        botoes.forEach(botao => {
-            botao.style.display = '';
-        });
-        
+        // Restaura botões e elementos
+        botoes.forEach(botao => botao.style.display = '');
+
         document.querySelectorAll('.select-print').forEach(span => {
             span.style.display = 'none';
         });
+
+        // Remove mensagens adicionadas
+        document.querySelectorAll('#div2 p, #tabela-apreensoes + p, #previewContainer p').forEach(p => p.remove());
     }, 100);
 }
 
