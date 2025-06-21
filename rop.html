@@ -1,119 +1,238 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+    
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login GMA</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #2c3e50, #3498db);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .login-container {
-      background-color: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .login-container img {
-      max-width: 120px;
-      margin-bottom: 20px;
-    }
-
-    .login-container h2 {
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
-
-    .login-container input[type="text"],
-.login-container input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box; /* <- ADICIONE ESTA LINHA */
-}
-    .login-container input[type="submit"] {
-  background-color: #3498db;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  width: 100%; /* agora 100% funciona corretamente */
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-    .login-container input[type="submit"]:hover {
-      background-color: #2980b9;
-    }
-
-    #mensagem {
-      color: red;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="script.js" class="js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>ROP GMA</title>
 </head>
+
 <body>
+    <div class="principal">
+        <h1>RELATÓRIO DE OCORRÊNCIA POLICIAL</h1>
 
-  <div class="login-container">
-    <img src="logo.jpg">
-    <h2>ROP GMA</h2>
+        <section>
+            <table class="prefeitura">
+                <tr>
+                    <td rowspan="3" class="tdimg">
+                        <img src="logo.jpg" alt="">
+                    </td>
+                    <td class="prefeitura2" rowspan="3">
+                        <strong>SECRETARIA DA DEFESA SOCIAL E DA CIDADANIA <br>
+                            PREFEITURA DE ARACAJU<br>
+                        GUARDA MUNICIPAL DE ARACAJU</strong>
+                    </td>
+                    <td colspan="2" class="registro-ocorrencia">
+                        Registro de ocorrência nº:
+                        <input type="text" name="" size="40">
+                    </td>
+                </tr>
+                <tr>
+                    <td> Data do Fato: <input type="date" name=""> </td>
+                    <td> Hora do Fato: <input type="time" name="" id="horafato"> </td>
+                </tr>
+                <tr id="destinatario">
+                    <td colspan="2"> Destinatário: <input type="text" size="40"> </td>
+                </tr>
+            </table>
 
-    <form onsubmit="return validarLogin(event)">
-      <input type="text" id="usuario" placeholder="Usuário" required maxlength="6">
-     <input type="password" id="senha" placeholder="Senha" required maxlength="6">
-      <input type="submit" value="Entrar">
-      <p id="mensagem"></p>
-    </form>
-  </div>
+            <div class="fundocinza" id="dados1">
+                <input type="checkbox" name="item" id=""> Prisão/Apreensão em Flagrante
+                <input type="checkbox" name="" id=""> Comunicação de Ocorrência
+                <input type="checkbox" name="" id=""> Mandado de prisão em aberto
+                <input type="checkbox" name="" id=""> Outros
+            </div>
 
-  <script>
-	
+            <div class="fundopreto">
+                I - DADOS DA OCORRÊNCIA
+            </div>
 
-    async function sha256(texto) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(texto);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+            <table id="tabeladados">
+                <tr>
+                    <td> Natureza:
+                        <select onchange="updateSelectPrint(this)" onchange="updateSelectPrint(this)" name="">
+                            <option value=""></option>
+                            <option value="">Prisão em Flagrante</option>
+                            <option value="">Apreensão em Flagrante</option>
+                            <option value="">Prisão e Apreensão em Flagrante</option>
+                            <option value="">Mandado de prisão em aberto</option>
+                            <option value="">Comunicado de fato relevante</option>
+                            <option value="">Termo Circunstanciado de Ocorrência</option>
+                            <option value="">Outros</option>
+                        </select>
+                    </td>
+                    <td colspan="2" class="tddescricao"> Tipo de delito: <input type="text" size="60"> </td>
+                </tr>
+                <tr>
+                    <td colspan="2"> Local da Ocorrência: <input type="text" size="50"> </td>
+                    <td> UF: <input type="text" id="uf" size="32" value="SE"> </td>
+                </tr>
+                <tr>
+                    <td rowspan="1"> Cidade: <input type="text" size="25" value="Aracaju"> </td>
+                    <td rowspan="1"> Número: <input type="text" size="10" value="S/N"> </td>
+                    <td>Bairro: <input type="text" size="30"></td>
+                </tr>
+            </table>
 
-    async function validarLogin(event) {
-  event.preventDefault();
-  const usuario = document.getElementById("usuario").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  const senhaHash = await sha256(senha);
-  const usuarioHash = await sha256(usuario);
-  const ss = "1b0adeeab2c440835829559952d5472136ce3626e75a516caefcee718a5868da";
-  const uu = "3638a16ee0ebb8e51637ca2bdddbdc343f9812ff6fbe19d207047496cbe3ea5e";
+            <div class="fundopreto">
+                II - DADOS DAS PARTES ENVOLVIDAS NA OCORRÊNCIA
+            </div>
 
-if (usuarioHash == uu && senhaHash == ss) {
-  localStorage.setItem("autorizado", "true"); // Marca o acesso
-  window.location.href = "rop.html";
-} else {
-  document.getElementById("mensagem").innerText = "Usuário ou senha inválidos.";
-  localStorage.removeItem("autorizado");
+            <div id="tabelaconduz">
+                <div>
+                    <div class="fundocinza">
+                        <i class="fa-solid fa-user-tie"></i> PARTE ENVOLVIDA:
+                       <input type="checkbox" class="parte-envolvida"> Autor
+ 			 <input type="checkbox" class="parte-envolvida"> Vítima
+  			<input type="checkbox" class="parte-envolvida"> Testemunha
+  			<input type="checkbox" class="parte-envolvida"> Outros
+                    </div>
 
-}
-}
+                    <div>
+                        <table id="conduzidos">
+                            <tr>
+                                <td class="cpf">Nome: <input type="text" name="" id="nome"></td>
+                                <td>Data de Nascimento: <input type="date" name="" id="datanascimento"></td>
+                                <td class="pai">Pai: <input type="text" id="pai"></td>
+                            </tr>
+                            <tr>
+                                <td class="cpf">Condição Física:
+                                    <select name="">
+                                        <option value="">Sem Ferimentos</option>
+                                        <option value="">Especificado abaixo</option>
+                                    </select><span class="select-print" style="display: none;"></span>
+                                </td>
+                                <td id="sexo"> Sexo:
+                                    <select name="">
+                                        <option value="">Masculino</option>
+                                        <option value="">Feminino</option>
+                                    </select><span class="select-print" style="display: none;"></span>
+                                </td>
+                                <td class="pai">Mãe: <input type="text" name="" id="mae"></td>
+                            </tr>
+                            <tr>
+                                <td class="cpf">Naturalidade: <input type="text" name="" id="" size="30"></td>
+                                <td colspan="2" class="end">End: <input type="text" name="" id="end"></td>
+                            </tr>
+                            <tr>
+                                <td class="cpf">CPF: <input type="text" name="" id="" size="30"></td>
+                                <td class="cidade">Cidade/UF: <input type="text" name="" id=""></td>
+                                <td class="pai">Telefone: <input type="text" name="" id="telefone"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="div2"></div>
+            <div class="divbotao">
+                <button id="inserir-btn" onclick="inserir()"> Adicionar Parte Envolvida
+                    <i class="fa-solid fa-user-tie"></i>
+                </button>
+            </div>
+
+            <div class="fundopreto">
+                III - RELATO DA OCORRÊNCIA
+            </div>
+            <textarea id="relato" oninput="autoExpand(this)"></textarea>
+            
+            <div class="fundopreto">
+                IV - APREENSÕES (OBJETOS, ARMAS, VEÍCULOS, SUBSTÂNCIA ENTORPECENTE, OUTROS...)
+            </div>
+            
+            <div class="bloco">
+                <table id="tabela-apreensoes" class="tabela3" style="display: none;">
+                    <thead>
+                        <tr class="fundocinza">
+                            <th>Tipo</th>
+                            <th>Especificação</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            
+                <div class="divbotao">
+                    <button onclick="adicionarApreensao()">Adicionar Apreensão</button>
+                </div>
+            </div>
+
+            <div id="dadosdaocorrencia" class="fundopreto">
+                V - IMAGENS DO OCORRIDO
+            </div>
+            <div class="container">
+                <input type="file" id="upload" accept="image/*" multiple>
+                <button class="custom-btn" onclick="document.getElementById('upload').click()">Escolher Arquivos</button>
+                <div class="preview-container" id="previewContainer"></div>
+            </div>
+
+            <div class="fundopreto">
+                VI - GMS ENVOLVIDOS NA OCORRÊNCIA
+            </div>
+            
+            <div class="bloco">
+                <table id="tabela-gms" class="tabela3">
+                    <thead>
+                        <tr class="fundocinza">
+                            <th>Nível</th>
+                            <th>Nome de Guerra</th>
+                            <th>Matrícula</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            
+                <div class="divbotao">
+                    <button onclick="adicionarAgente()">Adicionar Agente</button>
+                </div>
 
 
+ <div class="postodeservico">
+                <strong> POSTO DE SERVIÇO:</strong> <input type="text" name="" id="" size="45">
+                <STROng>TURNO:</STROng><input type="text" name="24h" id="" value="24h">
+            </div>
 
+            </div>
 
-  </script>
+            <div class="assinaturaequipe">
+                __________________________________________________________ <br> <strong>Assinatura do responsável pela equipe </strong>
+            </div>
 
+           
+
+            <div class="fundopreto">
+                VII - RECIBO DA AUTORIDADE A QUE SE DESTINA OU SEU REPRESENTANTE LEGAL
+            </div>
+            <div class="descricao container">
+                Recebi este <strong>ROP</strong> com as devidas qualificações das pessoas envolvidas, com as condições
+                físicas descritas acima e portando os objetos especificados no campo IV que foram apreendidos e
+                apresentados
+                nesta unidade policial. <br>
+                <br>
+                <br>
+                __________________________________________________________ <br>
+                <strong> Assinatura da Autoridade Policial </strong>
+            </div>
+
+            <div class="fundopreto">
+                <p> <i class="fa-solid fa-building-shield"></i> Guarda Municipal de Aracaju |
+                    <i class="fa-solid fa-location-dot"></i> Endereço: Av. Ivo do Prado, 904, Bairro São José – – CEP
+                    49.100-065. |
+                    <i class="fa-brands fa-whatsapp"></i> Tel.: (79) 98166-7790
+                </p>
+            </div>
+
+           <div class="imprimir">
+                 <button onclick="imprimirSemBotoes()"> Imprimir
+                    <i class="fa-solid fa-print"></i>
+                </button>
+            </div>
+        </section>
+    </div>
+    <script src="https://kit.fontawesome.com/18d18cbb9b.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
 </body>
 </html>
