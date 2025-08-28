@@ -396,7 +396,8 @@ figcaption {
     .button-container {
         display: none !important;
     }
-* Campos expansíveis */
+/* Campos expansíveis */}
+
 textarea {
     width: 100%;
     min-height: 100px;
@@ -464,4 +465,72 @@ textarea {
     height: 100%;
     object-fit: contain;
     background-color: white;
+}
+
+/* ===== Realce dos campos enquanto digitando ===== */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+    transition: box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+}
+
+/* Quando em foco */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border: 1px solid #3498db !important;
+    box-shadow: 0 0 6px rgba(52, 152, 219, 0.7);
+    background-color: #f0f8ff; /* azul claro */
+}
+
+/* ===== Impressão: remove o destaque ===== */
+@media print {
+    input,
+    select,
+    textarea {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        outline: none !important;
+    }
+}
+
+
+/* ===== Realce automático ===== */
+input, select, textarea {
+    border: 1px solid #ccc;
+    transition: all 0.3s;
+}
+
+/* Vazio = vermelho */
+.vazio {
+    border: 2px solid red !important;
+    background-color: #ffe5e5 !important;
+}
+
+/* Preenchido = verde */
+.preenchido {
+    border: 2px solid green !important;
+    background-color: #e5ffe5 !important;
+}
+
+/* Impressão: limpa os realces */
+@media print {
+    input, select, textarea {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+}
+
+
+@media print {
+  .vazio, .preenchido {
+    border: none !important;
+    background: transparent !important;
+  }
 }

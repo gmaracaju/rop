@@ -334,3 +334,44 @@ function ativarExclusividadeParte() {
 window.addEventListener('DOMContentLoaded', () => {
     ativarExclusividadeParte();
 });
+
+
+// ===== Realce automático dos campos =====
+function aplicarRealce(campo) {
+    if (campo.type === "checkbox" || campo.type === "radio") return; // ignora checkboxes
+    if (campo.tagName === "SELECT") {
+        if (campo.value && campo.value.trim() !== "") {
+            campo.classList.remove("vazio");
+            campo.classList.add("preenchido");
+        } else {
+            campo.classList.remove("preenchido");
+            campo.classList.add("vazio");
+        }
+    } else {
+        if (campo.value && campo.value.trim() !== "") {
+            campo.classList.remove("vazio");
+            campo.classList.add("preenchido");
+        } else {
+            campo.classList.remove("preenchido");
+            campo.classList.add("vazio");
+        }
+    }
+}
+
+function inicializarRealce() {
+    const campos = document.querySelectorAll("input, select, textarea");
+    campos.forEach(campo => {
+        aplicarRealce(campo);
+        campo.addEventListener("input", () => aplicarRealce(campo));
+        campo.addEventListener("change", () => aplicarRealce(campo));
+    });
+}
+
+// Rodar quando a página carrega
+window.addEventListener("DOMContentLoaded", inicializarRealce);
+
+// Rodar sempre que novos elementos forem adicionados
+const observer = new MutationObserver(() => {
+    inicializarRealce();
+});
+observer.observe(document.body, { childList: true, subtree: true });
