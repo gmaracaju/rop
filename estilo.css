@@ -534,3 +534,10 @@ input, select, textarea {
     background: transparent !important;
   }
 }
+
+
+@media print {
+    textarea, textarea#relato {
+        border: 1px solid #000 !important;
+    }
+}
