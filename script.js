@@ -1,7 +1,14 @@
 window.addEventListener('DOMContentLoaded', () => {
     const autorizado = localStorage.getItem("autorizado");
     if (autorizado !== "true") {
-      document.body.innerHTML = "<h1 style='color: red; text-align: center; margin-top: 50px;'>Usuário não autorizado</h1>";
+     document.body.innerHTML = `
+        <h1 style="color: red; text-align: center; margin-top: 50px;">Usuário não autorizado</h1>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="window.location.href='index.html'"
+              style="background-color:#3498db; color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-size:16px;">
+              Fazer Login
+            </button>
+        </div>`;
     } else {
       // Limpa o localStorage se quiser bloquear recarregamentos subsequentes
       localStorage.removeItem("autorizado");
