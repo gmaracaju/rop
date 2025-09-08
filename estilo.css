@@ -541,3 +541,26 @@ input, select, textarea {
         border: 1px solid #000 !important;
     }
 }
+
+/* Estilos para o botão de logout */
+.imprimir button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    color: black;
+    margin-left: 10px;
+    background-color: #aaa;
+}
+
+/* Aviso de dados restaurados */
+.aviso-restaurado {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    color: #856404;
+    text-align: center;
+}

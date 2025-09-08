@@ -23,6 +23,7 @@
       width: 100%;
       max-width: 400px;
       text-align: center;
+      position: relative;
     }
 
     .login-container img {
@@ -36,26 +37,28 @@
     }
 
     .login-container input[type="text"],
-.login-container input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box; /* <- ADICIONE ESTA LINHA */
-}
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    
     .login-container input[type="submit"] {
-  background-color: #3498db;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  width: 100%; /* agora 100% funciona corretamente */
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
+      background-color: #3498db;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    
     .login-container input[type="submit"]:hover {
       background-color: #2980b9;
     }
@@ -63,6 +66,62 @@
     #mensagem {
       color: red;
       margin-top: 10px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .modal-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .continue {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .new {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      color: #856404;
     }
   </style>
 </head>
@@ -80,9 +139,25 @@
     </form>
   </div>
 
-  <script>
-	
+  <div id="modalRestaurar" class="modal">
+    <div class="modal-content">
+      <h3>Dados anteriores encontrados</h3>
+      <div class="warning">
+        <strong>Aviso importante:</strong> Restaurar dados anteriores pode incluir informações desatualizadas ou incorretas. 
+        Verifique cuidadosamente todos os dados restaurados antes de finalizar o relatório.
+      </div>
+      <p>Foi detectado um relatório em andamento não finalizado. Deseja restaurar esses dados?</p>
+      <div class="modal-buttons">
+        <button class="modal-button continue" onclick="continuarOcorrencia()">Continuar ocorrência</button>
+        <button class="modal-button new" onclick="novaOcorrencia()">Nova ocorrência</button>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    // Limpar autorização ao carregar a página de login
+    localStorage.removeItem("autorizado");
+    
     async function sha256(texto) {
       const encoder = new TextEncoder();
       const data = encoder.encode(texto);
@@ -92,28 +167,43 @@
     }
 
     async function validarLogin(event) {
-  event.preventDefault();
-  const usuario = document.getElementById("usuario").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  const senhaHash = await sha256(senha);
-  const usuarioHash = await sha256(usuario);
-  const ss = "1b0adeeab2c440835829559952d5472136ce3626e75a516caefcee718a5868da";
-  const uu = "3638a16ee0ebb8e51637ca2bdddbdc343f9812ff6fbe19d207047496cbe3ea5e";
+      event.preventDefault();
+      const usuario = document.getElementById("usuario").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const senhaHash = await sha256(senha);
+      const usuarioHash = await sha256(usuario);
+      const ss = "1b0adeeab2c440835829559952d5472136ce3626e75a516caefcee718a5868da";
+      const uu = "3638a16ee0ebb8e51637ca2bdddbdc343f9812ff6fbe19d207047496cbe3ea5e";
 
-if (usuarioHash == uu && senhaHash == ss) {
-  localStorage.setItem("autorizado", "true"); // Marca o acesso
-  window.location.href = "rop.html";
-} else {
-  document.getElementById("mensagem").innerText = "Usuário ou senha inválidos.";
-  localStorage.removeItem("autorizado");
+      if (usuarioHash == uu && senhaHash == ss) {
+        localStorage.setItem("autorizado", "true");
+        localStorage.setItem("ultimoLogin", Date.now());
+        
+        // Verificar se há dados salvos para restaurar
+        const estadoSalvo = localStorage.getItem('ropEstado');
+        if (estadoSalvo) {
+          // Mostrar modal perguntando se deseja restaurar
+          document.getElementById('modalRestaurar').style.display = 'block';
+        } else {
+          // Não há dados salvos, redirecionar diretamente
+          window.location.href = "rop.html";
+        }
+      } else {
+        document.getElementById("mensagem").innerText = "Usuário ou senha inválidos.";
+        localStorage.removeItem("autorizado");
+      }
+    }
 
-}
-}
+    function continuarOcorrencia() {
+      // Manter os dados salvos e redirecionar
+      window.location.href = "rop.html";
+    }
 
-
-
-
+    function novaOcorrencia() {
+      // Limpar dados salvos e redirecionar
+      localStorage.removeItem('ropEstado');
+      window.location.href = "rop.html";
+    }
   </script>
-
 </body>
 </html>

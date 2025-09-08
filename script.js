@@ -1,21 +1,332 @@
+// Verificação de autorização - sempre verifica ao carregar a página
 window.addEventListener('DOMContentLoaded', () => {
     const autorizado = localStorage.getItem("autorizado");
-    if (autorizado !== "true") {
-     document.body.innerHTML = `
-        <h1 style="color: red; text-align: center; margin-top: 50px;">Usuário não autorizado</h1>
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="window.location.href='index.html'"
-              style="background-color:#3498db; color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-size:16px;">
-              Fazer Login
-            </button>
-        </div>`;
+    const ultimoLogin = localStorage.getItem("ultimoLogin");
+    const agora = Date.now();
+    
+    // Se não está autorizado ou o login foi há mais de 10 minutos
+    if (autorizado !== "true" || (ultimoLogin && agora - ultimoLogin > 10 * 60 * 1000)) {
+        // Limpar dados de autorização
+        localStorage.removeItem("autorizado");
+        localStorage.removeItem("ultimoLogin");
+        
+        // Redirecionar para login
+        window.location.href = "index.html";
     } else {
-      // Limpa o localStorage se quiser bloquear recarregamentos subsequentes
-      localStorage.removeItem("autorizado");
+        // Atualizar timestamp do login
+        localStorage.setItem("ultimoLogin", Date.now());
+        
+        // Restaurar estado salvo se existir
+        restaurarEstado();
+        
+        // Adicionar listeners para salvar automaticamente
+        adicionarListenersParaSalvar();
     }
-  });
+});
 
+// Função para salvar todo o estado do formulário
+function salvarEstado() {
+    const estado = {
+        // Dados básicos da ocorrência
+        registro: document.getElementById('registro')?.value,
+        dataFato: document.getElementById('dataFato')?.value,
+        horaFato: document.getElementById('horafato')?.value,
+        destinatario: document.getElementById('destinatarioInput')?.value,
+        natureza: document.getElementById('natureza')?.value,
+        tipoDelito: document.getElementById('tipoDelito')?.value,
+        localOcorrencia: document.getElementById('localOcorrencia')?.value,
+        uf: document.getElementById('uf')?.value,
+        cidade: document.getElementById('cidade')?.value,
+        numero: document.getElementById('numero')?.value,
+        bairro: document.getElementById('bairro')?.value,
+        
+        // Checkboxes
+        checkboxes: {
+            prisaoFlagrante: document.getElementById('prisaoFlagrante')?.checked,
+            comunicacaoOcorrencia: document.getElementById('comunicacaoOcorrencia')?.checked,
+            mandadoPrisao: document.getElementById('mandadoPrisao')?.checked,
+            outros: document.getElementById('outros')?.checked
+        },
+        
+        // Partes envolvidas
+        partesEnvolvidas: [],
+        
+        // Relato
+        relato: document.getElementById('relato')?.value,
+        
+        // Apreensões
+        apreensoes: [],
+        
+        // GMs envolvidos
+        gmsEnvolvidos: [],
+        
+        // Posto de serviço
+        postoServico: document.getElementById('postoServico')?.value,
+        turno: document.getElementById('turno')?.value,
+        
+        // Timestamp
+        timestamp: Date.now()
+    };
 
+    // Salvar partes envolvidas
+    document.querySelectorAll('#tabelaconduz, .tabelaconduz-clone').forEach((div, index) => {
+        if (div.style.display !== 'none') {
+            const parte = {
+                nome: div.querySelector('#nome')?.value,
+                dataNascimento: div.querySelector('#datanascimento')?.value,
+                pai: div.querySelector('#pai')?.value,
+                mae: div.querySelector('#mae')?.value,
+                condicaoFisica: div.querySelector('#condicaoFisica')?.value,
+                sexo: div.querySelector('#sexoSelect')?.value,
+                naturalidade: div.querySelector('#naturalidade')?.value,
+                endereco: div.querySelector('#endereco')?.value,
+                cpf: div.querySelector('#cpf')?.value,
+                cidadeUf: div.querySelector('#cidadeUf')?.value,
+                telefone: div.querySelector('#telefone')?.value,
+                tipo: {
+                    autor: div.querySelectorAll('input[type="checkbox"]')[0]?.checked,
+                    vitima: div.querySelectorAll('input[type="checkbox"]')[1]?.checked,
+                    testemunha: div.querySelectorAll('input[type="checkbox"]')[2]?.checked,
+                    outros: div.querySelectorAll('input[type="checkbox"]')[3]?.checked
+                }
+            };
+            estado.partesEnvolvidas.push(parte);
+        }
+    });
+
+    // Salvar apreensões
+    document.querySelectorAll('#tabela-apreensoes tbody tr').forEach(tr => {
+        if (tr.querySelector('select') && tr.querySelector('input[type="text"]')) {
+            estado.apreensoes.push({
+                tipo: tr.querySelector('select').value,
+                especificacao: tr.querySelector('input[type="text"]').value
+            });
+        }
+    });
+
+    // Salvar GMs envolvidos
+    document.querySelectorAll('#tabela-gms tbody tr').forEach(tr => {
+        const inputs = tr.querySelectorAll('input[type="text"]');
+        if (inputs.length >= 2) {
+            estado.gmsEnvolvidos.push({
+                nivel: tr.querySelector('select').value,
+                nomeGuerra: inputs[0].value,
+                matricula: inputs[1].value
+            });
+        }
+    });
+
+    localStorage.setItem('ropEstado', JSON.stringify(estado));
+}
+
+// Função para restaurar o estado do formulário
+function restaurarEstado() {
+    const estadoSalvo = localStorage.getItem('ropEstado');
+    if (!estadoSalvo) {
+        // Se não há dados salvos, ocultar a parte padrão
+        document.querySelector('#tabelaconduz').style.display = 'none';
+        return;
+    }
+
+    const estado = JSON.parse(estadoSalvo);
+
+    // Restaurar dados básicos
+    if (document.getElementById('registro')) document.getElementById('registro').value = estado.registro || '';
+    if (document.getElementById('dataFato')) document.getElementById('dataFato').value = estado.dataFato || '';
+    if (document.getElementById('horafato')) document.getElementById('horafato').value = estado.horaFato || '';
+    if (document.getElementById('destinatarioInput')) document.getElementById('destinatarioInput').value = estado.destinatario || '';
+    if (document.getElementById('natureza')) document.getElementById('natureza').value = estado.natureza || '';
+    if (document.getElementById('tipoDelito')) document.getElementById('tipoDelito').value = estado.tipoDelito || '';
+    if (document.getElementById('localOcorrencia')) document.getElementById('localOcorrencia').value = estado.localOcorrencia || '';
+    if (document.getElementById('uf')) document.getElementById('uf').value = estado.uf || 'SE';
+    if (document.getElementById('cidade')) document.getElementById('cidade').value = estado.cidade || 'Aracaju';
+    if (document.getElementById('numero')) document.getElementById('numero').value = estado.numero || 'S/N';
+    if (document.getElementById('bairro')) document.getElementById('bairro').value = estado.bairro || '';
+    
+    // Restaurar checkboxes
+    if (estado.checkboxes) {
+        if (document.getElementById('prisaoFlagrante')) document.getElementById('prisaoFlagrante').checked = estado.checkboxes.prisaoFlagrante || false;
+        if (document.getElementById('comunicacaoOcorrencia')) document.getElementById('comunicacaoOcorrencia').checked = estado.checkboxes.comunicacaoOcorrencia || false;
+        if (document.getElementById('mandadoPrisao')) document.getElementById('mandadoPrisao').checked = estado.checkboxes.mandadoPrisao || false;
+        if (document.getElementById('outros')) document.getElementById('outros').checked = estado.checkboxes.outros || false;
+    }
+    
+    // Restaurar relato
+    if (document.getElementById('relato')) {
+        document.getElementById('relato').value = estado.relato || '';
+        // Expandir o textarea após restaurar o conteúdo
+        autoExpand(document.getElementById('relato'));
+    }
+    
+    // Restaurar partes envolvidas - CORRIGIDO: não restaurar partes vazias
+    if (estado.partesEnvolvidas && estado.partesEnvolvidas.length > 0) {
+        // Filtrar apenas partes com dados válidos
+        const partesComDados = estado.partesEnvolvidas.filter(parte => 
+            parte.nome || parte.cpf || parte.endereco || parte.pai || parte.mae
+        );
+        
+        if (partesComDados.length > 0) {
+            // Mostrar a primeira parte
+            const primeiraParte = document.querySelector('#tabelaconduz');
+            primeiraParte.style.display = 'block';
+            
+            restaurarParteEnvolvida(primeiraParte, partesComDados[0]);
+            
+            // Adicionar e restaurar as partes adicionais
+            for (let i = 1; i < partesComDados.length; i++) {
+                inserir();
+                const novasPartes = document.querySelectorAll('#tabelaconduz, .tabelaconduz-clone');
+                const ultimaParte = novasPartes[novasPartes.length - 1];
+                restaurarParteEnvolvida(ultimaParte, partesComDados[i]);
+                
+                // CORREÇÃO: Garantir que o botão de excluir seja visível
+                ultimaParte.style.display = 'block';
+            }
+        } else {
+            // Se não há partes com dados válidos, ocultar a primeira parte
+            document.querySelector('#tabelaconduz').style.display = 'none';
+        }
+    } else {
+        // Se não há partes envolvidas salvas, ocultar a primeira parte
+        document.querySelector('#tabelaconduz').style.display = 'none';
+    }
+    
+    // Restaurar apreensões
+    if (estado.apreensoes && estado.apreensoes.length > 0) {
+        document.getElementById('tabela-apreensoes').style.display = 'table';
+        estado.apreensoes.forEach(apreensao => {
+            adicionarApreensao();
+            const todasLinhas = document.querySelectorAll('#tabela-apreensoes tbody tr');
+            const ultimaLinha = todasLinhas[todasLinhas.length - 1];
+            ultimaLinha.querySelector('select').value = apreensao.tipo;
+            ultimaLinha.querySelector('input[type="text"]').value = apreensao.especificacao;
+        });
+    }
+    
+    // Restaurar GMs envolvidos
+    if (estado.gmsEnvolvidos && estado.gmsEnvolvidos.length > 0) {
+        estado.gmsEnvolvidos.forEach(gm => {
+            adicionarAgente();
+            const todasLinhas = document.querySelectorAll('#tabela-gms tbody tr');
+            const ultimaLinha = todasLinhas[todasLinhas.length - 1];
+            ultimaLinha.querySelector('select').value = gm.nivel;
+            const inputs = ultimaLinha.querySelectorAll('input[type="text"]');
+            inputs[0].value = gm.nomeGuerra;
+            inputs[1].value = gm.matricula;
+        });
+    }
+    
+    // Restaurar posto de serviço
+    if (document.getElementById('postoServico')) 
+        document.getElementById('postoServico').value = estado.postoServico || '';
+    if (document.getElementById('turno')) 
+        document.getElementById('turno').value = estado.turno || '24h';
+    
+    // Atualizar realce dos campos
+    inicializarRealce();
+}
+
+// Função auxiliar para restaurar uma parte envolvida
+function restaurarParteEnvolvida(container, dados) {
+    if (container.querySelector('#nome')) container.querySelector('#nome').value = dados.nome || '';
+    if (container.querySelector('#datanascimento')) container.querySelector('#datanascimento').value = dados.dataNascimento || '';
+    if (container.querySelector('#pai')) container.querySelector('#pai').value = dados.pai || '';
+    if (container.querySelector('#mae')) container.querySelector('#mae').value = dados.mae || '';
+    if (container.querySelector('#condicaoFisica')) container.querySelector('#condicaoFisica').value = dados.condicaoFisica || '';
+    if (container.querySelector('#sexoSelect')) container.querySelector('#sexoSelect').value = dados.sexo || '';
+    if (container.querySelector('#naturalidade')) container.querySelector('#naturalidade').value = dados.naturalidade || '';
+    if (container.querySelector('#endereco')) container.querySelector('#endereco').value = dados.endereco || '';
+    if (container.querySelector('#cpf')) container.querySelector('#cpf').value = dados.cpf || '';
+    if (container.querySelector('#cidadeUf')) container.querySelector('#cidadeUf').value = dados.cidadeUf || '';
+    if (container.querySelector('#telefone')) container.querySelector('#telefone').value = dados.telefone || '';
+    
+    // Restaurar tipo (autor, vítima, etc.)
+    if (dados.tipo) {
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        if (checkboxes[0]) checkboxes[0].checked = dados.tipo.autor || false;
+        if (checkboxes[1]) checkboxes[1].checked = dados.tipo.vitima || false;
+        if (checkboxes[2]) checkboxes[2].checked = dados.tipo.testemunha || false;
+        if (checkboxes[3]) checkboxes[3].checked = dados.tipo.outros || false;
+    }
+    
+    // CORREÇÃO: Garantir que o botão de excluir seja adicionado para partes clonadas
+    // Verificar se é um clone e não tem botão de excluir
+    if (container.classList.contains('tabelaconduz-clone') && !container.querySelector('.excluir-btn')) {
+        // Remove o botão antigo, se houver
+        var oldButton = container.querySelector(".button-container");
+        if (oldButton) oldButton.remove();
+
+        // Cria botão de exclusão
+        var excluirBtn = document.createElement("button");
+        excluirBtn.innerHTML = "EXCLUIR";
+        excluirBtn.classList.add("excluir-btn");
+        excluirBtn.onclick = function () { ocultarDiv(container); };
+
+        var buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("button-container");
+        buttonContainer.appendChild(excluirBtn);
+        container.appendChild(buttonContainer);
+    }
+}
+
+// Adicionar listeners para salvar automaticamente
+function adicionarListenersParaSalvar() {
+    document.querySelectorAll('input, select, textarea').forEach(element => {
+        element.addEventListener('input', salvarEstado);
+        element.addEventListener('change', salvarEstado);
+    });
+}
+
+// Modificar as funções de inserção para também salvar o estado
+const originalInserir = inserir;
+inserir = function() {
+    originalInserir();
+    setTimeout(salvarEstado, 100);
+}
+
+const originalAdicionarApreensao = adicionarApreensao;
+adicionarApreensao = function() {
+    originalAdicionarApreensao();
+    setTimeout(salvarEstado, 100);
+}
+
+const originalAdicionarAgente = adicionarAgente;
+adicionarAgente = function() {
+    originalAdicionarAgente();
+    setTimeout(salvarEstado, 100);
+}
+
+// Adicionar event listener para o botão de remover imagens
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-btn')) {
+        setTimeout(salvarEstado, 100);
+    }
+});
+
+// Função para limpar todos os dados
+function limparDados() {
+    if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+        localStorage.removeItem('ropEstado');
+        location.reload();
+    }
+}
+
+// Adicionar função para fazer logout
+function fazerLogout() {
+    if (confirm('Deseja sair do sistema? Os dados atuais serão salvos para possível recuperação.')) {
+        // Salvar estado atual antes de sair
+        salvarEstado();
+        
+        // Limpar autorização
+        localStorage.removeItem("autorizado");
+        localStorage.removeItem("ultimoLogin");
+        
+        // Redirecionar para login
+        window.location.href = "index.html";
+    }
+}
+
+// ===== FUNÇÕES ORIGINAIS =====
 function inserir() {
     var original = document.querySelector("#tabelaconduz");
     var div2 = original.cloneNode(true);
@@ -50,6 +361,7 @@ function inserir() {
 
 function ocultarDiv(div) {
     div.style.display = "none";
+    salvarEstado();
 }
 
 let fileInput = document.getElementById("file-input");
@@ -68,6 +380,7 @@ function preview() {
 
         function excluirImagem() {
             figure.remove();
+            salvarEstado();
         }
 
         reader.onload = () => {
@@ -90,6 +403,7 @@ function preview() {
         imageContainer.appendChild(figure);
         reader.readAsDataURL(i);
     }
+    salvarEstado();
 }
 
 function login() {
@@ -128,6 +442,7 @@ uploadInput.addEventListener('change', function () {
 
             removeBtn.addEventListener('click', () => {
                 previewContainer.removeChild(imageBox);
+                salvarEstado();
             });
 
             imageBox.appendChild(img);
@@ -139,6 +454,7 @@ uploadInput.addEventListener('change', function () {
     });
 
     this.value = '';
+    salvarEstado();
 });
 
 function imprimirSemBotoes() {
@@ -214,6 +530,7 @@ function imprimirSemBotoes() {
 function updateSelectPrint(select) {
     const printSpan = select.nextElementSibling;
     printSpan.textContent = select.options[select.selectedIndex].text;
+    salvarEstado();
 }
 
 function adicionarApreensao() {
@@ -247,6 +564,7 @@ function adicionarApreensao() {
     btnExcluir.onclick = () => {
         tr.remove();
         btnExcluir.remove();
+        salvarEstado();
 
         // Se não houver mais linhas, esconde a tabela
         if (tbody.querySelectorAll('tr').length === 0) {
@@ -289,6 +607,7 @@ function adicionarAgente() {
     btnExcluir.onclick = () => {
         tr.remove();
         btnExcluir.remove();
+        salvarEstado();
     };
 
     const divBtn = document.createElement('div');
@@ -297,10 +616,16 @@ function adicionarAgente() {
 
     tr.parentNode.insertBefore(divBtn, tr.nextSibling);
 }
+
 function autoExpand(textarea) {
-    textarea.style.height = 'auto'; // reset
-    textarea.style.height = textarea.scrollHeight + 'px';
+    // Pequeno delay para garantir que o conteúdo foi renderizado
+    setTimeout(() => {
+        textarea.style.height = 'auto'; // reset
+        textarea.style.height = textarea.scrollHeight + 'px';
+        salvarEstado();
+    }, 10);
 }
+
 function excluirLinha(btn) {
     const row = btn.closest('tr');
     const buttonRow = row.nextElementSibling;
@@ -308,6 +633,7 @@ function excluirLinha(btn) {
     if (buttonRow && buttonRow.classList.contains('button-container-row')) {
         buttonRow.remove();
     }
+    salvarEstado();
 }
 
 // Garante que só um checkbox por grupo seja marcado
@@ -322,6 +648,7 @@ document.querySelectorAll('.parte-envolvida').forEach(cb => {
                 if (outro !== this) outro.checked = false;
             });
         }
+        salvarEstado();
     });
 });
 
@@ -334,14 +661,31 @@ function ativarExclusividadeParte() {
                     if (outro !== this) outro.checked = false;
                 });
             }
+            salvarEstado();
         });
     });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     ativarExclusividadeParte();
+    
+    // Verificar se a parte padrão está vazia e ocultá-la se necessário
+    const partePadrao = document.querySelector('#tabelaconduz');
+    const inputs = partePadrao.querySelectorAll('input');
+    
+    let temDados = false;
+    for (let input of inputs) {
+        if (input.value && input.value.trim() !== '') {
+            temDados = true;
+            break;
+        }
+    }
+    
+    // Se não tem dados e não está restaurando de um estado salvo, ocultar
+    if (!temDados && !localStorage.getItem('ropEstado')) {
+        partePadrao.style.display = 'none';
+    }
 });
-
 
 // ===== Realce automático dos campos =====
 function aplicarRealce(campo) {
@@ -369,8 +713,14 @@ function inicializarRealce() {
     const campos = document.querySelectorAll("input, select, textarea");
     campos.forEach(campo => {
         aplicarRealce(campo);
-        campo.addEventListener("input", () => aplicarRealce(campo));
-        campo.addEventListener("change", () => aplicarRealce(campo));
+        campo.addEventListener("input", () => {
+            aplicarRealce(campo);
+            salvarEstado();
+        });
+        campo.addEventListener("change", () => {
+            aplicarRealce(campo);
+            salvarEstado();
+        });
     });
 }
 

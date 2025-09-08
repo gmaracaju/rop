@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
@@ -26,22 +25,22 @@
 </td>
 <td class="registro-ocorrencia" colspan="2">
                         Registro de ocorrência nº:
-                        <input name="" size="40" type="text"/>
+                        <input id="registro" name="" size="40" type="text"/>
 </td>
 </tr>
 <tr>
-<td> Data do Fato: <input name="" type="date"/> </td>
+<td> Data do Fato: <input id="dataFato" name="" type="date"/> </td>
 <td> Hora do Fato: <input id="horafato" name="" type="time"/> </td>
 </tr>
 <tr id="destinatario">
-<td colspan="2"> Destinatário: <input size="40" type="text"/> </td>
+<td colspan="2"> Destinatário: <input id="destinatarioInput" size="40" type="text"/> </td>
 </tr>
 </table>
 <div class="fundocinza" id="dados1">
-<input id="" name="item" type="checkbox"/> Prisão/Apreensão em Flagrante
-                <input id="" name="" type="checkbox"/> Comunicação de Ocorrência
-                <input id="" name="" type="checkbox"/> Mandado de prisão em aberto
-                <input id="" name="" type="checkbox"/> Outros
+<input id="prisaoFlagrante" name="item" type="checkbox"/> Prisão/Apreensão em Flagrante
+                <input id="comunicacaoOcorrencia" name="" type="checkbox"/> Comunicação de Ocorrência
+                <input id="mandadoPrisao" name="" type="checkbox"/> Mandado de prisão em aberto
+                <input id="outros" name="" type="checkbox"/> Outros
             </div>
 <div class="fundopreto">
                 I - DADOS DA OCORRÊNCIA
@@ -49,7 +48,7 @@
 <table id="tabeladados">
 <tr>
 <td> Natureza:
-                        <select name="" onchange="updateSelectPrint(this)">
+                        <select id="natureza" name="" onchange="updateSelectPrint(this)">
 <option value=""></option>
 <option value="prisao_em_flagrante">Prisão em Flagrante</option>
 <option value="apreensao_em_flagrante">Apreensão em Flagrante</option>
@@ -60,16 +59,16 @@
 <option value="outros">Outros</option>
 </select><span class="select-print" style="display: none;"></span>
 </td>
-<td class="tddescricao" colspan="2"> Tipo de delito: <input size="60" type="text"/> </td>
+<td class="tddescricao" colspan="2"> Tipo de delito: <input id="tipoDelito" size="60" type="text"/> </td>
 </tr>
 <tr>
-<td colspan="2"> Local da Ocorrência: <input size="50" type="text"/> </td>
+<td colspan="2"> Local da Ocorrência: <input id="localOcorrencia" size="50" type="text"/> </td>
 <td> UF: <input id="uf" size="32" type="text" value="SE"/> </td>
 </tr>
 <tr>
-<td rowspan="1"> Cidade: <input size="25" type="text" value="Aracaju"/> </td>
-<td rowspan="1"> Número: <input size="10" type="text" value="S/N"/> </td>
-<td>Bairro: <input size="30" type="text"/></td>
+<td rowspan="1"> Cidade: <input id="cidade" size="25" type="text" value="Aracaju"/> </td>
+<td rowspan="1"> Número: <input id="numero" size="10" type="text" value="S/N"/> </td>
+<td>Bairro: <input id="bairro" size="30" type="text"/></td>
 </tr>
 </table>
 <div class="fundopreto">
@@ -93,27 +92,27 @@
 </tr>
 <tr>
 <td class="cpf">Condição Física:
-                                    <select name="">
+                                    <select id="condicaoFisica" name="">
 <option value="sem_ferimentos">Sem Ferimentos</option>
 <option value="especificado_abaixo">Especificado abaixo</option>
 </select><span class="select-print" style="display: none;"></span>
 </td>
 <td id="sexo"> Sexo:
-                                    <select name="">
+                                    <select id="sexoSelect" name="">
 <option value="masculino">Masculino</option>
 <option value="feminino">Feminino</option>
-<option value="Outros>Outros</option>                                      
+<option value="outros">Outros</option>                                      
 </select><span class="select-print" style="display: none;"></span>
 </td>
 <td class="pai">Mãe: <input id="mae" name="" type="text"/></td>
 </tr>
 <tr>
-<td class="cpf">Naturalidade: <input id="" name="" size="30" type="text"/></td>
-<td class="end" colspan="2">End: <input id="end" name="" type="text"/></td>
+<td class="cpf">Naturalidade: <input id="naturalidade" name="" size="30" type="text"/></td>
+<td class="end" colspan="2">End: <input id="endereco" name="" type="text"/></td>
 </tr>
 <tr>
-<td class="cpf">CPF: <input id="" name="" size="30" type="text"/></td>
-<td class="cidade">Cidade/UF: <input id="" name="" type="text"/></td>
+<td class="cpf">CPF: <input id="cpf" name="" size="30" type="text"/></td>
+<td class="cidade">Cidade/UF: <input id="cidadeUf" name="" type="text"/></td>
 <td class="pai">Telefone: <input id="telefone" name="" type="text"/></td>
 </tr>
 </table>
@@ -173,8 +172,8 @@
 <button onclick="adicionarAgente()">Adicionar Agente</button>
 </div>
 <div class="postodeservico">
-<strong> POSTO DE SERVIÇO:</strong> <input id="" name="" size="45" type="text"/>
-<strong>TURNO:</strong><input id="" name="24h" type="text" value="24h"/>
+<strong> POSTO DE SERVIÇO:</strong> <input id="postoServico" name="" size="45" type="text"/>
+<strong>TURNO:</strong><input id="turno" name="24h" type="text" value="24h"/>
 </div>
 </div>
 <div class="assinaturaequipe">
@@ -203,6 +202,12 @@
 <div class="imprimir">
 <button onclick="imprimirSemBotoes()"> Imprimir
                     <i class="fa-solid fa-print"></i>
+</button>
+<button onclick="limparDados()" style="background-color: #e74c3c; margin-left: 10px;"> Limpar Dados
+                    <i class="fa-solid fa-trash"></i>
+</button>
+<button onclick="fazerLogout()" style="background-color: #95a5a6; margin-left: 10px;"> Sair
+                    <i class="fa-solid fa-right-from-bracket"></i>
 </button>
 </div>
 </section>
