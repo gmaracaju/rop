@@ -732,3 +732,11 @@ const observer = new MutationObserver(() => {
     inicializarRealce();
 });
 observer.observe(document.body, { childList: true, subtree: true });
+
+// Adicionar atalho Ctrl+P para imprimir
+document.addEventListener('keydown', function(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+        event.preventDefault(); // Impede a caixa de diálogo de impressão padrão
+        imprimirSemBotoes(); // Chama sua função personalizada
+    }
+});
