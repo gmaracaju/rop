@@ -496,6 +496,25 @@ function imprimirSemBotoes() {
         preview.appendChild(aviso);
     }
 
+    // Substituir textarea por div para impressão
+    const relatoTextarea = document.getElementById('relato');
+    const relatoDiv = document.createElement('div');
+    relatoDiv.id = 'relato-print';
+    relatoDiv.textContent = relatoTextarea.value;
+    relatoDiv.style.width = '100%';
+    relatoDiv.style.minHeight = '40px';
+    relatoDiv.style.border = '1px solid #000';
+    relatoDiv.style.fontSize = '12pt';
+    relatoDiv.style.padding = '5px';
+    relatoDiv.style.lineHeight = '1.4';
+    relatoDiv.style.boxSizing = 'border-box';
+    relatoDiv.style.overflowWrap = 'break-word';
+    relatoDiv.style.wordBreak = 'break-word';
+    relatoDiv.style.pageBreakInside = 'auto';
+    relatoDiv.style.pageBreakBefore = 'avoid';
+    relatoDiv.style.whiteSpace = 'pre-wrap';
+    relatoTextarea.parentNode.replaceChild(relatoDiv, relatoTextarea);
+
     // Atualiza visualização de selects
     document.querySelectorAll('select').forEach(select => {
         const printSpan = select.nextElementSibling;
@@ -524,6 +543,10 @@ function imprimirSemBotoes() {
 
         // Remove mensagens adicionadas
         document.querySelectorAll('#div2 p, #tabela-apreensoes + p, #previewContainer p').forEach(p => p.remove());
+
+        // Restaurar textarea
+        relatoDiv.parentNode.replaceChild(relatoTextarea, relatoDiv);
+        autoExpand(relatoTextarea);
     }, 100);
 }
 
@@ -733,10 +756,12 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { childList: true, subtree: true });
 
-// Adicionar atalho Ctrl+P para imprimir
-document.addEventListener('keydown', function(event) {
-    if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
-        event.preventDefault(); // Impede a caixa de diálogo de impressão padrão
-        imprimirSemBotoes(); // Chama sua função personalizada
-    }
+window.addEventListener('load', function() {
+    // Adicionar atalho Ctrl+P para imprimir
+    document.addEventListener('keydown', function(event) {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
+            event.preventDefault(); // Impede a caixa de diálogo de impressão padrão
+            imprimirSemBotoes(); // Chama sua função personalizada
+        }
+    });
 });
