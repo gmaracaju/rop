@@ -505,6 +505,7 @@ function imprimirSemBotoes() {
     relatoDiv.style.minHeight = '40px';
     relatoDiv.style.border = '1px solid #000';
     relatoDiv.style.fontSize = '12pt';
+    relatoDiv.style.textAlign = 'justify';
     relatoDiv.style.padding = '5px';
     relatoDiv.style.lineHeight = '1.4';
     relatoDiv.style.boxSizing = 'border-box';
