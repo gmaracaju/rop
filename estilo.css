@@ -134,6 +134,7 @@ textarea {
 #relato {
     overflow: hidden !important;
     resize: vertical;
+    text-align: justify !important;
 }
 
 table tr td {
@@ -410,6 +411,7 @@ textarea {
     max-height: 1000px;
     border: 1px solid #ccc;
     font-size: 12pt;
+    text-align: justify;
     box-sizing: border-box;
     padding: 2px 4px;
     overflow-wrap: break-word;
@@ -426,6 +428,7 @@ textarea {
     max-height: 8000px;
     border: 1px solid #000;
     font-size: 12pt;
+    text-align: justify;
     padding: 5px;
     line-height: 1.4;
     resize: none;
@@ -547,6 +550,7 @@ input, select, textarea {
 @media print {
     textarea, textarea#relato {
         border: 1px solid #000 !important;
+        text-align: justify !important;
     }
 }
 
