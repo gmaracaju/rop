@@ -615,7 +615,7 @@ function adicionarAgente() {
                 <option>Subinspetor de 2ª Classe</option>
                 <option>Subinspetor de 3ª Classe</option>
                 <option>Supervisor</option>
-                <option>Polícia Municipal</option>
+                <option>Guarda Municipal</option>
             </select>
             <span class="select-print" style="display:none;"></span>
         </td>
